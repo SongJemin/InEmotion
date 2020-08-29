@@ -25,6 +25,7 @@
                 android:layout_height="50dp"
                 android:text="기록하기"
                 android:layout_centerHorizontal="true"
+                android:onClick="@{() -> viewModel.moveWrite()}"
                 />
 
             <Button

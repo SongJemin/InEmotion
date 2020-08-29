@@ -1,11 +1,13 @@
 package com.ssongjem.inmotion.ui.main
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
 import com.ssongjem.inmotion.R
 import com.ssongjem.inmotion.base.BaseActivity
 import com.ssongjem.inmotion.databinding.ActivityMainBinding
+import com.ssongjem.inmotion.ui.record.RecordActivity
+import com.ssongjem.inmotion.ui.write.WriteActivity
 
 class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNavigator {
 
@@ -14,21 +16,32 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNav
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        dataBinding()
 
         binding = getViewDataBinding()
-        mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-        mainViewModel.setNavigator(this)
+        getViewModel()
 
         binding.lifecycleOwner = this
         binding.viewModel = mainViewModel
     }
 
     override fun getLayoutId(): Int {
-        TODO("Not yet implemented")
+        return R.layout.activity_main
     }
 
     override fun getViewModel(): MainViewModel {
-        TODO("Not yet implemented")
+        mainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        mainViewModel.setNavigator(this)
+        return mainViewModel
+    }
+
+    override fun moveWrite() {
+        var intent = Intent(application, WriteActivity::class.java)
+        startActivity(intent)
+    }
+
+    override fun moveRecord() {
+        var intent = Intent(application, RecordActivity::class.java)
+        startActivity(intent)
     }
 }
