@@ -1,7 +1,10 @@
 package com.ssongjem.inmotion.ui.main
 
+import android.Manifest
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
 import com.ssongjem.inmotion.R
 import com.ssongjem.inmotion.base.BaseActivity
@@ -13,6 +16,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNav
 
     private lateinit var binding : ActivityMainBinding
     private lateinit var mainViewModel: MainViewModel
+    private val PERMISSION : Int = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,6 +24,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNav
 
         binding = getViewDataBinding()
         getViewModel()
+        checkPermission()
 
         binding.lifecycleOwner = this
         binding.viewModel = mainViewModel
@@ -35,13 +40,27 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNav
         return mainViewModel
     }
 
+    // 기록하기 화면으로 이동
     override fun moveWrite() {
         var intent = Intent(application, WriteActivity::class.java)
         startActivity(intent)
     }
 
+    // 기록보기 화면으로 이동
     override fun moveRecord() {
         var intent = Intent(application, RecordActivity::class.java)
         startActivity(intent)
+    }
+
+    fun checkPermission(){
+        if (Build.VERSION.SDK_INT >= 23) {
+            // 퍼미션 체크
+            ActivityCompat.requestPermissions(
+                this, arrayOf(
+                    Manifest.permission.INTERNET,
+                    Manifest.permission.RECORD_AUDIO
+                ), PERMISSION
+            )
+        }
     }
 }
