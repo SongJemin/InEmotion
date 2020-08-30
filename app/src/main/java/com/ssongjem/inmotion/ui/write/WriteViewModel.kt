@@ -7,17 +7,24 @@ import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
 import android.widget.Toast
+import androidx.lifecycle.LiveData
 import com.ssongjem.inmotion.base.BaseViewModel
+import com.ssongjem.inmotion.data.EmotionWord
+import com.ssongjem.inmotion.util.localdb.AppDatabase
+import com.ssongjem.inmotion.util.localdb.repo.EmotionWordRepo
 
 
 class WriteViewModel(application: Application) : BaseViewModel<WriteNavigator>(application) {
 
     lateinit var speechRecognizer : SpeechRecognizer
     lateinit var intent : Intent
+    private val repository : EmotionWordRepo
     var getApplication = application
 
     init{
         initSetting()
+        val emotionWordDao = AppDatabase.getDatabase(getApplication).emotionWordDao()
+        repository = EmotionWordRepo(emotionWordDao)
     }
 
     fun record() {

@@ -1,20 +1,27 @@
 package com.ssongjem.inmotion.ui.main
 
 import android.app.Application
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
-import androidx.room.Room
 import com.ssongjem.inmotion.base.BaseViewModel
 import com.ssongjem.inmotion.data.EmotionWord
 import com.ssongjem.inmotion.util.localdb.AppDatabase
+import com.ssongjem.inmotion.util.localdb.repo.EmotionWordRepo
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MainViewModel(application: Application) : BaseViewModel<MainNavigator>(application) {
 
-    private val inmotionDB = Room.databaseBuilder(
-        application,
-        AppDatabase::class.java, "inmotionDB"
-    ).build()
+    private val repository : EmotionWordRepo
+    var emotionWords : LiveData<List<EmotionWord>>
+    var getApplication = application
+
+    init {
+        val emotionWordDao = AppDatabase.getDatabase(getApplication).emotionWordDao()
+        repository = EmotionWordRepo(emotionWordDao)
+        // 감정 유추 단어 리스트 보기
+        emotionWords = repository.allEmotionWords
+    }
 
     fun moveWrite() {
         getNavigator()!!.moveWrite()
@@ -39,7 +46,7 @@ class MainViewModel(application: Application) : BaseViewModel<MainNavigator>(app
         viewModelScope.launch(Dispatchers.IO) {
             var arr: List<EmotionWord> = saveWord()
             for (i in 0..arr.size - 1) {
-                inmotionDB.emotionWordDao().insertEmotionWord(arr.get(i))
+                AppDatabase.getDatabase(getApplication).emotionWordDao().insertEmotionWord(arr.get(i))
             }
         }
     }
