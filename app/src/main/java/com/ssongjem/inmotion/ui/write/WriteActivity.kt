@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.ssongjem.inmotion.R
 import com.ssongjem.inmotion.base.BaseActivity
 import com.ssongjem.inmotion.databinding.ActivityWriteBinding
+import kotlinx.android.synthetic.main.activity_write.*
 
 class WriteActivity : BaseActivity<ActivityWriteBinding, WriteViewModel>(), WriteNavigator {
 
@@ -19,7 +20,6 @@ class WriteActivity : BaseActivity<ActivityWriteBinding, WriteViewModel>(), Writ
 
         binding = getViewDataBinding()
         getViewModel()
-
 
         binding.lifecycleOwner = this
         binding.viewModel = writeViewModel
@@ -35,5 +35,9 @@ class WriteActivity : BaseActivity<ActivityWriteBinding, WriteViewModel>(), Writ
         return writeViewModel
     }
 
-
+    override fun setVoiceResult(matches: ArrayList<String>) {
+        for (i in 0.. matches.size-1){
+            tv_write_result.setText(matches.get(i))
+        }
+    }
 }

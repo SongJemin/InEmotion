@@ -68,7 +68,8 @@ class WriteViewModel(application: Application) : BaseViewModel<WriteNavigator>(a
 
         override fun onResults(result: Bundle?) {
             Toast.makeText(getApplication, "onResults", Toast.LENGTH_SHORT).show()
-            var matches : ArrayList<String> = result.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)
+            var matches : ArrayList<String> = result!!.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION) as ArrayList<String>
+            getNavigator()!!.setVoiceResult(matches)
         }
     }
 }
