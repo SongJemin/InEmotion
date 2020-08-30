@@ -6,11 +6,14 @@ import android.os.Build
 import android.os.Bundle
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.ssongjem.inmotion.R
 import com.ssongjem.inmotion.base.BaseActivity
 import com.ssongjem.inmotion.databinding.ActivityMainBinding
 import com.ssongjem.inmotion.ui.record.RecordActivity
 import com.ssongjem.inmotion.ui.write.WriteActivity
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNavigator {
 
@@ -28,6 +31,11 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(), MainNav
 
         binding.lifecycleOwner = this
         binding.viewModel = mainViewModel
+
+        // Save Data
+        lifecycleScope.launch(Dispatchers.IO) {
+            mainViewModel.insertEmotionWord()
+        }
     }
 
     override fun getLayoutId(): Int {
