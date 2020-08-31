@@ -2,10 +2,10 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.write.WriteActivity">
+    tools:context=".ui.write.WriteActivity"
+    >
 
     <data>
-
         <variable
             name="viewModel"
             type="com.ssongjem.inmotion.ui.write.WriteViewModel" />
@@ -13,7 +13,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="#ffffff">
 
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -26,16 +27,20 @@
                 android:layout_width="200dp"
                 android:layout_height="50dp"
                 android:onClick="@{() -> viewModel.record()}"
-                android:text="Voice Record" />
-
-            <TextView
-                android:id="@+id/tv_write_result"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="음성인식 결과"
-                android:layout_below="@+id/btn_write_record"
+                android:text="Voice Record"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="30dp"
+                />
+
+            <EditText
+                android:id="@+id/et_write_todayemotion"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginHorizontal="20dp"
+                android:hint="오늘의 감정을 쏟아내세요"
+                android:background="#f8f8f8"
+                android:padding="10dp"
+                android:gravity="top"
+                android:layout_marginTop="70dp"
                 />
 
             <TextView
@@ -43,10 +48,41 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
-                android:layout_below="@+id/tv_write_result"
+                android:layout_below="@+id/et_write_todayemotion"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="30dp"
                 />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_write_score"
+                android:layout_marginTop="20dp"
+                android:layout_centerHorizontal="true"
+                >
+
+                <Button
+                    android:id="@+id/btn_write_add"
+                    android:layout_width="100dp"
+                    android:layout_height="50dp"
+                    android:layout_below="@+id/tv_write_score"
+                    android:layout_centerHorizontal="true"
+                    android:text="추가"
+                    android:onClick="@{() -> viewModel.clickAddBtn()}"
+                    />
+
+                <Button
+                    android:id="@+id/btn_write_refresh"
+                    android:layout_width="100dp"
+                    android:layout_height="50dp"
+                    android:layout_below="@+id/tv_write_score"
+                    android:layout_centerHorizontal="true"
+                    android:text="초기화"
+                    android:layout_marginStart="30dp"
+                    android:onClick="@{() -> viewModel.clickRefreshBtn()}"
+                    />
+
+            </LinearLayout>
 
         </RelativeLayout>
 

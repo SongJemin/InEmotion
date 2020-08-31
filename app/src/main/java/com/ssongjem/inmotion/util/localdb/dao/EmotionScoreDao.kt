@@ -13,8 +13,8 @@ interface EmotionScoreDao {
     fun selectTodayScore(date : String) : EmotionScore
 
     @Insert
-    fun insertTodayScore()
+    fun insertTodayScore(emotionScore: EmotionScore)
 
     @Update
-    fun updateTodayScore()
+    fun updateTodayScore(emotionScore: EmotionScore)
 }
