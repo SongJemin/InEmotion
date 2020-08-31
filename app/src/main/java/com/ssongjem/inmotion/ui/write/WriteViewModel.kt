@@ -6,25 +6,61 @@ import android.os.Bundle
 import android.speech.RecognitionListener
 import android.speech.RecognizerIntent
 import android.speech.SpeechRecognizer
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.viewModelScope
 import com.ssongjem.inmotion.base.BaseViewModel
 import com.ssongjem.inmotion.data.EmotionWord
 import com.ssongjem.inmotion.util.localdb.AppDatabase
 import com.ssongjem.inmotion.util.localdb.repo.EmotionWordRepo
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class WriteViewModel(application: Application) : BaseViewModel<WriteNavigator>(application) {
 
-    lateinit var speechRecognizer : SpeechRecognizer
-    lateinit var intent : Intent
-    private val repository : EmotionWordRepo
+    lateinit var speechRecognizer: SpeechRecognizer
+    lateinit var intent: Intent
+    private val repository: EmotionWordRepo
+    lateinit var matches: ArrayList<String>
+    var emotionScore: LiveData<Int>? = null
     var getApplication = application
 
-    init{
+    var score = 50
+
+    init {
         initSetting()
         val emotionWordDao = AppDatabase.getDatabase(getApplication).emotionWordDao()
         repository = EmotionWordRepo(emotionWordDao)
+    }
+
+    fun scoring() {
+        Log.d("ssongjem", "inputData size = " + matches.size)
+        for (i in 0..matches.size - 1) {
+            var inputData = matches.get(i)
+            Log.d("ssongjem", "inputData[" + i + "] = " + inputData)
+            var st = StringTokenizer(inputData, " ")
+
+            while (st.hasMoreTokens()) {
+                var word = st.nextToken()
+                checkWord(word)
+            }
+        }
+    }
+
+    fun checkWord(word: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            // 데이터 있을 경우
+            var eWord = repository.selectEmotionWord(word)
+            if (eWord != null) {
+                score = eWord.score
+                Log.d("jemin", "score = " + score)
+                getNavigator()!!.setScoreResult(score)
+            }
+        }
     }
 
     fun record() {
@@ -40,7 +76,7 @@ class WriteViewModel(application: Application) : BaseViewModel<WriteNavigator>(a
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "ko-KR")
     }
 
-    private fun listener() : RecognitionListener = object : RecognitionListener {
+    private fun listener(): RecognitionListener = object : RecognitionListener {
         override fun onReadyForSpeech(p0: Bundle?) {
             Toast.makeText(getApplication, "onReadyForSpeech", Toast.LENGTH_SHORT).show()
         }
@@ -75,8 +111,11 @@ class WriteViewModel(application: Application) : BaseViewModel<WriteNavigator>(a
 
         override fun onResults(result: Bundle?) {
             Toast.makeText(getApplication, "onResults", Toast.LENGTH_SHORT).show()
-            var matches : ArrayList<String> = result!!.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION) as ArrayList<String>
+            matches =
+                result!!.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION) as ArrayList<String>
             getNavigator()!!.setVoiceResult(matches)
+
+            scoring()
         }
     }
 }

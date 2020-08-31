@@ -2,6 +2,7 @@ package com.ssongjem.inmotion.ui.write
 
 import android.os.Bundle
 import android.speech.SpeechRecognizer
+import android.util.Log
 import androidx.lifecycle.ViewModelProvider
 import com.ssongjem.inmotion.R
 import com.ssongjem.inmotion.base.BaseActivity
@@ -35,9 +36,16 @@ class WriteActivity : BaseActivity<ActivityWriteBinding, WriteViewModel>(), Writ
         return writeViewModel
     }
 
+    // 음성 결과 보여주기
     override fun setVoiceResult(matches: ArrayList<String>) {
         for (i in 0.. matches.size-1){
             tv_write_result.setText(matches.get(i))
         }
+    }
+
+    // 점수 보여주기
+    override fun setScoreResult(score: Int) {
+        Log.d("jemin", "score = " + score)
+        tv_write_score.setText(score.toString())
     }
 }

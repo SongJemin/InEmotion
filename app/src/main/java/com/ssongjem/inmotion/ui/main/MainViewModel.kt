@@ -28,7 +28,7 @@ class MainViewModel(application: Application) : BaseViewModel<MainNavigator>(app
     }
 
     fun moveRecord() {
-        getNavigator()!!.moveWrite()
+        getNavigator()!!.moveRecord()
     }
 
     fun saveWord(): List<EmotionWord> {

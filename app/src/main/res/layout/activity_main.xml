@@ -37,6 +37,7 @@
                 android:layout_below="@+id/btn_main_write"
                 android:layout_marginTop="50dp"
                 android:layout_centerHorizontal="true"
+                android:onClick="@{() -> viewModel.moveRecord()}"
                 />
 
         </RelativeLayout>
