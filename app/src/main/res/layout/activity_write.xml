@@ -82,6 +82,15 @@
                     android:onClick="@{() -> viewModel.clickRefreshBtn()}"
                     />
 
+                <Button
+                    android:id="@+id/btn_write_save"
+                    android:layout_width="100dp"
+                    android:layout_height="50dp"
+                    android:text="저장"
+                    android:layout_marginStart="30dp"
+                    android:onClick="@{() -> viewModel.clickSaveBtn()}"
+                    />
+
             </LinearLayout>
 
         </RelativeLayout>

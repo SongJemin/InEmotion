@@ -112,6 +112,20 @@ class WriteViewModel(application: Application) : BaseViewModel<WriteNavigator>(a
         speechRecognizer.startListening(intent)
     }
 
+    fun clickSaveBtn() {
+        var date = "2020-10-04"
+        var emotionScore = EmotionScore(date, score)
+        Log.d("ssongjem", "saveBtn date = " + date + ", score = " + score)
+        viewModelScope.launch(Dispatchers.IO) {
+            var getEmotionScore = emotionScoreRepo.selectTodayScore(date)
+
+            Log.d("ssongjem", "GetEmotionScore, date =  " + getEmotionScore.date + ", score = " + getEmotionScore.totalScore)
+
+            if(getEmotionScore == null) emotionScoreRepo.insertTodayScore(emotionScore)
+            else emotionScoreRepo.updateTodayScore(emotionScore)
+        }
+    }
+
     fun initSetting() {
         intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
         intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getApplication.packageName)
